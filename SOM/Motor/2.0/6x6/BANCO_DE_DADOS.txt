@@ -1,0 +1,24 @@
+-------------BANCO ESPEC 1----------------
+
+- 6 harmonicas (0,5 1,5 2,5 3 5 7)
+
+- 42 amostras de cada classe (SF, A1, A2, A3, B1, B2, B3)
+
+- Labels:   0 - SF
+            1 - A1
+            2 - A2
+            3 - A3
+            4 - B1
+            5 - B2
+            6 - B3
+
+- 294 amostras no total (42 sem falha x 252 com falha)
+
+
+OBS.:
+
+Para visualizar os dados no Matlab o aluno deve usar o comando abaixo
+
+A=importdata('data_ESPEC_1.mat');
+
+e depois abrir a matriz "A" no workspace. Os rótulos ficam na segunda variável.

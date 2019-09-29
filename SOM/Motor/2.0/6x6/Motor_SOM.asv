@@ -1,0 +1,75 @@
+% Análise de dados para escolha da mehor topologia
+clear all; %limpar os dados carregados anterior mente
+close all; %feixar todas as janelas
+clc; %limpar a tela 
+%format long
+
+
+%inicializar variáveis---------------------------
+Arquivo = 'teste6x6.txt';
+savefile = 'Mmin6x6.mat';
+imgSave = 'Dados2D6x6.jpg';
+nR = 50;
+nE = 100;
+nN = 36;
+nC = 7;
+aI = 0.3;
+aF = 0.01;
+rI = 3;
+rF = 0;
+K = 3;
+%------------------------------------------------
+
+
+Dad = importdata('data_ESPEC_1.mat');% carrega os dados do arquivo ".txt" para a variavel "dados".
+dadosTotal = Dad.data1';
+label = Dad.rot';
+dadosTotal = dadosTotal*1000;
+dadosTotal = [dadosTotal label];
+%Normalização---------------------------
+% media = mean(dadosTotal(:,:));
+% %----------normalização
+% for i = 1:size(dadosTotal,2)
+%     dadosTotal(:,i) = dadosTotal(:,i)-media(:,i)/var(dadosTotal(:,i));
+% end
+% %------------------------
+%------------------------------------------
+
+nTeste = 10;
+nAtribut = size(dadosTotal,2)-1;
+side = sqrt(nN);%lado da matriz quadrada de neuronios
+for r = 1:nR
+    r
+    %-------------------------------------------------
+    Misturar=randperm(42);
+    SF = dadosTotal(1:42,:);
+    SF = SF(Misturar,:);
+    A1 = dadosTotal(43:84,:);
+    A1 = A1(Misturar,:);
+    A2 = dadosTotal(85:126,:);
+    A2 = A2(Misturar,:);
+    A3 = dadosTotal(127:168,:);
+    A3 = A3(Misturar,:);
+    B1 = dadosTotal(169:210,:);
+    B1 = B1(Misturar,:);
+    B2 = dadosTotal(211:252,:);
+    B2 = B2(Misturar,:);
+    B3 = dadosTotal(253:294,:);
+    B3 = B3(Misturar,:);
+
+if nTeste == 0
+else
+    dTeste = [SF(1:nTeste,:);A1(1:nTeste,:);A2(1:nTeste,:);A3(1:nTeste,:);B1(1:nTeste,:);B2(1:nTeste,:);B3(1:nTeste,:)];
+    dados= [SF(nTeste+1:42,:);A1(nTeste+1:42,:);A2(nTeste+1:42,:);A3(nTeste+1:42,:);B1(nTeste+1:42,:);B2(nTeste+1:42,:);B3(nTeste+1:42,:)];
+    Misturar = randperm(size(dados,1));
+    dados = dados(Misturar,:);
+    labelDados = dados(:,nAtribut+1);
+    labelTeste = dTeste(:,nAtribut+1);
+    dados = dados(:,1:nAtribut);
+    dTeste = dTeste(:,1:nAtribut);
+end
+
+%----------Fischer---------------------------
+
+%--------------------------------------------
+end

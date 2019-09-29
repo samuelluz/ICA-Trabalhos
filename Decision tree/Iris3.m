@@ -1,0 +1,137 @@
+clear all; %limpar os dados carregados anterior mente
+close all; %feixar todas as janelas
+clc; %limpar a tela 
+dadosLoad = load ('dados_iris.txt');% carrega os dados do arquivo ".txt" para a variavel "dados".
+nDados = size(dadosLoad,1);
+nTeste = 25;
+nTreino = nDados- 3*nTeste;
+
+setosa = dadosLoad(1:50,:);% selecional os valores das linhas de 1 a 50 e da coluna 1 a 4 (correspondem aos dados da setosa)
+versicolor = dadosLoad(51:100,:);% selecional os valores das linhas de 51 a 100 e da coluna 1 a 4 (correspondem aos dados da versicolor)
+virginica = dadosLoad(101:150,:);% selecional os valores das linhas de 101 a 150 e da coluna 1 a 4 (correspondem aos dados da virginica)
+
+
+Misturar=randperm(50);
+setosaM = setosa(Misturar,:);
+Misturar=randperm(50);
+versicolorM = versicolor(Misturar,:);
+Misturar=randperm(50);
+virginicaM = virginica(Misturar,:);
+
+if nTeste == 0
+    Misturar = randperm(150);
+    dados = dadosLoad(Misturar,:);
+else
+    Misturar = randperm(nTreino);
+    dadosTeste = [setosaM(1:nTeste,:);versicolorM(1:nTeste,:);virginicaM(1:nTeste,:)];
+    dados= [setosaM(nTeste+1:50,:);versicolorM(nTeste+1:50,:);virginicaM(nTeste+1:50,:)];
+    dados = dados(Misturar,:);
+end
+%------Gráfico dos atributos 2x4
+subplot(2,2,1)
+hold on
+title('2x4')
+plot(setosa(:,2),setosa(:,4),'.r');
+plot(versicolor(:,2),versicolor(:,4),'.g');
+plot(virginica(:,2),virginica(:,4),'ob');
+grid on
+lineX = 0:5;
+%lineY = 0.49*lineX+0.28;
+lineY = 1.55*lineX-2.9;
+plot(lineX,lineY,'-r');
+hold off
+hold off
+
+%------Gráfico dos atributos 3x4
+subplot(2,2,2)
+hold on
+title('3x4')
+plot(setosa(:,3),setosa(:,4),'.r');
+plot(versicolor(:,3),versicolor(:,4),'.g');
+plot(virginica(:,3),virginica(:,4),'ob');
+
+plot(ones(5)*2.5,(0:4),'-r');
+plot(ones(3)*4.9,(0:2),'-g');
+%plot(ones(5)*5.2,(0:4),'-b');
+plot((0:5),ones(6)*1.65,'-g');
+%plot((0:10),ones(11)*1.85,'-b');
+lineX = 4:7;
+lineY = -0.79*lineX+5.8;
+plot(lineX,lineY,'-b');
+grid on
+hold off
+
+%------Clacudo dos Limiares
+
+Ys = zeros(size(dados(:,5)));
+p=1;
+q=1;
+for i = 1:size(dados,1)
+    
+    if dados(i,3) <= 2.5
+    Ys(i) = 1;
+    else
+        if dados(i,3)>2.5 && dados(i,3)<= 4.9 && dados(i,4)<=1.65
+        Ys(i) = 2;
+        else
+            (-0.79*dados(i,3)+5.8)-dados(i,4)
+            i
+            if  (-0.79*dados(i,3)+5.8)-dados(i,4)<=0
+                %dados(i,3)>= 5.2 || dados(i,4)>=1.85
+
+            Ys(i) = 3;
+            else
+                if 1.55*dados(i,2)-2.9-dados(i,4)<=0
+                    Ys(i) = 3;
+                    if dados(i,5) == 3
+                    virginica2(q,:) = dados(i,:);
+                    q=q+1;
+                    else
+                    versicolor2(p,:) = dados(i,:);
+                    p =p+1;
+                    end
+                else
+                    Ys(i) = 2;
+                    if dados(i,5) == 3
+                    virginica2(q,:) = dados(i,:);
+                    q=q+1;
+                    else
+                    versicolor2(p,:) = dados(i,:);
+                    p =p+1;
+                    end
+                end
+            end
+        end
+    end
+
+end %for
+
+
+%------Gráfico dos atributos 2x4
+subplot(2,2,3)
+hold on
+title('2x4')
+plot(versicolor2(:,2),versicolor2(:,4),'.g');
+plot(virginica2(:,2),virginica2(:,4),'ob');
+grid on
+
+lineX = 2.5:3.5;
+%lineY = 0.49*lineX+0.28;
+lineY = 1.55*lineX-2.9;
+plot(lineX,lineY,'-r');
+hold off
+
+%------Gráfico dos atributos 3x4
+subplot(2,2,4)
+hold on
+title('3x4')
+plot(versicolor2(:,3),versicolor2(:,4),'.g');
+plot(virginica2(:,3),virginica2(:,4),'ob');
+grid on
+hold off
+
+%-------calculo do erro
+Yf = abs(dados(:,5)-Ys);
+Erro = sum(Yf)
+
+AcertoTotal = (1-(Erro/150))*100

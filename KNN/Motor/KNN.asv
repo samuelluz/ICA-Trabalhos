@@ -1,0 +1,38 @@
+% Análise de dados para escolha da mehor topologia
+clear all; %limpar os dados carregados anterior mente
+close all; %feixar todas as janelas
+clc; %limpar a tela 
+%format long
+
+K = 3;
+nC = 7;
+M = importdata('M_3x3.txt');
+Dad = importdata('data_ESPEC_1.mat');% carrega os dados do arquivo ".txt" para a variavel "dados".
+dadosTotal = Dad.data1';
+label = Dad.rot';
+dados = dadosTotal*1000;
+Mistura = randperm(size(dados,1));
+label = label(Mistura,:);
+dados = dados(Mistura,:);
+Mk = zeros(nC,1);
+    nDados = size(dados,1);
+for n = 1:size(M,1)
+    for i = 1:nDados
+        Q(i) = norm(M(n,:)-dados(i,:));
+    end
+    [Qsort,Min] = sort(Q);
+    Klabel = label(Min(1:K));
+    for i = 1:K
+    Mk(Klabel(i)+1) = Mk(Klabel(i)+1)+1
+    end
+    [D,Max] = max(Mk);
+    Kiguais = find(Mk==Mk(Max));
+    
+    if size(Kiguais,1) == 1
+        labelM(n,1) = Max-1;
+    else
+        [D,min] = min(Q);
+        labelM(n,1) = label(min);
+    end
+%     end
+end
